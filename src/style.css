@@ -1,0 +1,241 @@
+:root {
+  --bg: #1f1f22;
+  --panel: #2a2d31;
+  --text: #e9eef3;
+  --muted: #8c96a0;
+  --border: #3a3f45;
+  --accent: #c8f3c8;
+  --accent-border: #7fcf7f;
+  --danger: #ef4444;
+  --danger-border: #7f1d1d;
+
+  --list-bg: #171a1e;
+  --item-bg: #262a2f;
+  --item-bg-hover: #2f343a;
+  --item-bg-active: #3a3f45;
+
+  --token-bg: #111827;
+  --token-border: #374151;
+  --token-error-bg: #2a1111;
+  --token-error-border: #7f1d1d;
+  --token-error-text: #fecaca;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  height: calc(100vh - 52px);
+  min-height: 100vh;
+}
+
+.work {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  border-right: 2px solid var(--border);
+}
+
+.sidebar {
+  background: #202327;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.btn {
+  appearance: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border);
+  background: #232629;
+  color: var(--text);
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: #4b5563;
+}
+
+.btn--acc {
+  background: var(--accent);
+  color: #0a290a;
+  font-weight: 700;
+}
+
+.sidebar__titles {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #cdd6df;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: var(--list-bg);
+  border: 2px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.35rem;
+  max-height: 40vh;
+  overflow: auto;
+}
+
+.item {
+  background: var(--item-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+.item:hover {
+  background: var(--item-bg-hover);
+}
+.item.is-active {
+  background: var(--item-bg-active);
+  border-color: #585e66;
+}
+
+.row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  color: var(--text);
+  background: #2a2d31;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+#btn-add.btn,
+#btn-del.btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 18px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+#btn-del.btn {
+  background: var(--danger);
+  color: #1b0000;
+}
+#btn-add.btn {
+  background: var(--accent);
+  color: #0a290a;
+}
+
+.tox.tox-tinymce {
+  border: 0;
+  border-radius: 0;
+}
+.tox .tox-editor-header,
+.tox-statusbar {
+  display: none;
+}
+.tox .tox-edit-area__iframe {
+  background: #1e2126;
+}
+
+.special-component {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--token-bg);
+  border: 1px solid var(--token-border);
+  border-radius: 0.35rem;
+  color: #e5e7eb;
+}
+.special-component .pill {
+  padding: 0.05rem 0.35rem;
+  background: #374151;
+  border-radius: 0.35rem;
+  font-size: 0.85em;
+}
+.special-component.error {
+  background: var(--token-error-bg);
+  border-color: var(--token-error-border);
+  color: var(--token-error-text);
+}
+
+.floating-select {
+  position: absolute;
+  z-index: 9999;
+  background: #0f1216;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.25rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+.floating-select select {
+  appearance: auto;
+  width: 220px;
+  padding: 0.4rem 0.5rem;
+  color: var(--text);
+  background: #14161a;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .sidebar {
+    border-top: 2px solid var(--border);
+  }
+}
