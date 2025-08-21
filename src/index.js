@@ -150,38 +150,50 @@ tinymce.init({
       background:#1e2126;
       font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial
     }
+      
     .special-component {
-      display:inline-flex;
-      align-items:center;
-      gap:.4rem;
-      padding:.1rem .4rem;
-      border:1px solid #374151;
-      border-radius:.35rem;
-      background:#111827;
-      color:#e5e7eb
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 .4rem;
+      border: 2px solid #434e61ff;
+      border-radius: .35rem;
+      background: #1e2126;
+      color: #e5e7eb;
+      min-width: 60px;
+      min-height: 1.6em;
+      line-height: 1.6em;
     }
+    .special-component[data-template-id=""]::after {
+      content: "▾";
+      margin-left: auto;
+      padding-left: .4rem; 
+      color: #fff;
+      font-size: 1em;
+    }
+
     .special-component.error {
       background:#2a1111;
       border-color:#7f1d1d;
       color:#fecaca
     }
-      ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
 
-::-webkit-scrollbar-track {
-  background: #1e1e1e;
-}
+    ::-webkit-scrollbar-track {
+      background: #1e1e1e;
+    }
 
-::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
-}
+    ::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+    }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #888;
-}
+    ::-webkit-scrollbar-thumb:hover {
+      background: #888;
+    }
 
   `,
   setup(editor) {
@@ -203,51 +215,71 @@ tinymce.init({
 });
 
 document.getElementById('btn-insert').onclick = () => {
-  const items = store.getAll();
-  const first = items[0];
-  const cls = 'special-component mceNonEditable' + (first ? '' : ' error');
-  const label = first ? escapeHtml(first.text) : 'ERROR';
-  const idAttr = first ? first.id : '';
-  const html = `<span class="${cls}" contenteditable="false" data-template-id="${idAttr}">${label}</span>`;
+  const html = `<span class="special-component mceNonEditable"
+                   contenteditable="false" 
+                   data-template-id="">
+                </span>`;
   editorRef?.insertContent(html);
 };
 
 let floatingSelectEl = null;
+
 function openFloatingSelectFor(comp) {
   closeFloatingSelect();
 
   const wrap = document.createElement('div');
   wrap.className = 'floating-select';
-  const sel = document.createElement('select');
+
+  const list = document.createElement('ul');
+  list.className = 'floating-select__list';
 
   store.getAll().forEach((it) => {
-    const opt = document.createElement('option');
-    opt.value = it.id;
-    opt.textContent = it.text;
-    sel.appendChild(opt);
+    const li = document.createElement('li');
+    li.textContent = it.text;
+    li.dataset.id = it.id;
+
+    li.onclick = (e) => {
+      e.stopPropagation();
+      updateComponentTemplate(comp, li.dataset.id);
+      closeFloatingSelect();
+      editorRef?.focus();
+    };
+
+    list.appendChild(li);
   });
 
-  sel.value = comp.dataset.templateId || '';
-
-  sel.onchange = () => {
-    updateComponentTemplate(comp, sel.value);
-    closeFloatingSelect();
-    editorRef?.focus();
-  };
-
-  wrap.appendChild(sel);
+  wrap.appendChild(list);
   document.body.appendChild(wrap);
 
+  const iframe = editorRef.iframeElement;
+  const iframeRect = iframe.getBoundingClientRect();
   const rect = comp.getBoundingClientRect();
-  wrap.style.left = rect.left + window.scrollX + 'px';
-  wrap.style.top = rect.bottom + 6 + window.scrollY + 'px';
+
+  wrap.style.position = 'absolute';
+  wrap.style.left = iframeRect.left + rect.left + 'px';
+  wrap.style.top = iframeRect.top + rect.bottom + 'px';
+  wrap.style.minWidth = rect.width + 'px';
 
   floatingSelectEl = wrap;
+
+  setTimeout(() => {
+    document.addEventListener('click', handleOutsideClick);
+    editorRef.getDoc().addEventListener('click', handleOutsideClick);
+  }, 0);
 }
+
 function closeFloatingSelect() {
   if (floatingSelectEl) {
     floatingSelectEl.remove();
     floatingSelectEl = null;
+    document.removeEventListener('click', handleOutsideClick);
+    editorRef.getDoc().removeEventListener('click', handleOutsideClick);
+  }
+}
+
+function handleOutsideClick(e) {
+  if (floatingSelectEl && !floatingSelectEl.contains(e.target)) {
+    closeFloatingSelect();
   }
 }
 
@@ -336,13 +368,4 @@ function handleTokenDeletionKeys(e) {
     e.preventDefault();
     token.remove();
   }
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
 }

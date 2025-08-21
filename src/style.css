@@ -171,6 +171,29 @@ input[type='text'] {
   background: #1e2126;
 }
 
+.floating-select__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #1e2126;
+  border: 1px solid #374151;
+  border-radius: 0.35rem;
+  color: #e5e7eb;
+  font-size: 14px;
+  min-width: 100px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.floating-select__list li {
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.floating-select__list li:hover {
+  background: #374151;
+}
+
 .special-component {
   display: inline-flex;
   align-items: center;
@@ -191,25 +214,6 @@ input[type='text'] {
   background: var(--token-error-bg);
   border-color: var(--token-error-border);
   color: var(--token-error-text);
-}
-
-.floating-select {
-  position: absolute;
-  z-index: 9999;
-  background: #0f1216;
-  border: 1px solid var(--border);
-  border-radius: 0.4rem;
-  padding: 0.25rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-}
-.floating-select select {
-  appearance: auto;
-  width: 220px;
-  padding: 0.4rem 0.5rem;
-  color: var(--text);
-  background: #14161a;
-  border: 1px solid var(--border);
-  border-radius: 0.35rem;
 }
 
 ::-webkit-scrollbar {
